@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cute Chat Bubble UI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #946a82, #fd68ba);
+      font-family: 'Comic Sans MS', 'Poppins', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      width: 390px;
+      height: 600px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px 20px 29px 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .chat-header {
+      padding: 16px;
+      background-color: #860b61;
+      color: white;
+      font-size: 29px;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 1px;
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f0dfed;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 12px 19px;
+      font-size: 14px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .bot-message {
+      background: #7c3673;
+      border-radius: 20px 20px 29px 0;
+      align-self: flex-start;
+      color: rgb(240, 230, 230);
+     
+      font-size: 16px;
+    }
+
+    .user-message {
+      background: linear-gradient(135deg, #b93181, #113447);
+      color: #f0eded;
+      border-radius: 20px 20px 0 20px;
+      align-self: flex-end;
+      
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 12px;
+      border-top: 1px solid #f197e5;
+      background: #fafaff;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 20px;
+      border: 1px solid #1c1c20;
+      outline: none;
+      font-size: 14px;
+      background: #f2f2fc;
+    }
+
+    .chat-input button {
+      margin-left: 8px;
+      background: linear-gradient(135deg, #996181, #8b3665);
+      border: none;
+      padding: 0 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+    }
+
+    .sen {
+      font-family: Tahoma, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Chatty  </div>
+
+    <!-- <div class="message bot-message">Hyy hiiii</div> -->
+
+    <div class="chat-body  user-chat" id="chat">
+    </div>
+
+    <div class="chat-input">
+      <input type="text" id="user-chat" placeholder="type message....." />
+      <button onclick="sendMessage()" class="sen">Send</button> 
+
+    </div>
+  </div>
+
+  <script>
+    let messages = [];
+
+    function sendMessage() {
+      let input = document.getElementById("user-chat");
+      let userText = input.value;
+
+      let data = {
+        message: userText,
+        type: "send"
+      };
+      messages.push(data);
+      console.log(messages);
+      let rpy = ""
+      if (userText == "hii") {
+        rpy = "hello  how are you&#128522";
+      }
+      else if(userText == "i am good" || userText == "how was it"){
+        rpy = "your name &#128512";
+      }
+      else if(userText == "shaik shirin" || userText == "your name "){
+        rpy = "nice &#128521 name ";
+      }
+      else if(userText ==  "tnqs" || userText == ""){
+        rpy = "&#128519 your favorite hobies ";
+      }
+      else if(userText == "listenig songs " ){
+        rpy = " favroite food!&#128518";
+      }
+      else if(userText == "birayani"){
+        rpy = "wich clor do you like &#128519";
+      }
+      else if(userText == "pink"){
+        rpy = " &#128522 do you have pet"
+      }
+      else {
+        rpy = "not sent"
+      }
+      console.log(rpy)
+      let data2 = {
+        messages: rpy,
+        type: "recieve"
+      };
+      messages.push(data2);
+      console.log(messages);
+
+
+      var chats = '';
+      for (i = 0; i < messages.length; i++) {
+        if (messages[i].type == "send") {
+          chats += '<div class=\"message user-message\">' + messages[i].message + '</div>';
+        }
+        else {
+          chats += '<div class=\"message bot-message\">' + messages[i].messages + '</div>';
+        }
+      }
+
+      // console.log(chats);
+      input.value ="";
+      document.getElementById('chat').innerHTML = chats;
+
+
+    }
+  </script>
+
+
+</body>
+
+</html>
