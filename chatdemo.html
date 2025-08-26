@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glassmorphism Chatbot UI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1496309732348-3627f3f040ee') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .chat-header {
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.4em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            color: white;
+        }
+
+        .user {
+            background: rgba(0, 123, 255, 0.3);
+            align-self: flex-end;
+            border-radius: 20px 20px 0 20px;
+
+        }
+
+        .bot {
+            background: rgba(255, 255, 255, 0.2);
+            align-self: flex-start;
+            border-radius: 20px 20px 29px 0;
+            color: rgb(240, 230, 230);
+            font-size: 16px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 12px;
+
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-size: 1em;
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .chat-input button {
+            padding: 0 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .chat-input button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .audio {
+            display: none;
+
+        }
+
+        .tim {
+            font-size: 10px;
+            color: #1f1b1e;
+            align-self: flex-end;
+        }
+
+        .tim2 {
+            font-size: 10px;
+            color: #1f1b1e;
+            align-self: flex-start;
+        }
+
+        .dt {
+            font-size: 10px;
+            color: #1f1b1e;
+        }
+
+        .dt2 {
+            font-size: 10px;
+            color: #1f1b1e;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0.2;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: white;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+    </style>
+
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Chatty &#129321 <br>
+            <span id="count" style="font-size:12px;"></span>
+        </div>
+
+        <div class="chat-messages" id="chat">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="user-chat" placeholder="type message....." />
+            <button onclick="sendMessage()" class="sen" id="btn">Send</button>
+        </div>
+    </div>
+
+    <audio src="C:\Users\Lenovo\Downloads\notify-8-313753.mp3" controls id="music" class="audio"></audio>
+
+    <script>
+        var newarray = []
+        let count = 0
+        let messages = [];
+
+        function sendMessage() {
+            evaluateExpression();
+            count += 2;
+            var time = new Date();
+            var datetime = time.toLocaleString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+
+            var date = time.toLocaleString([], {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+
+            });
+            let input = document.getElementById("user-chat").value;
+            let data = {
+                message: input,
+                type: "send",
+                // time : 12.25,
+            };
+            messages.push(data);
+            userText = input.toLowerCase();
+
+            console.log(messages);
+            let rpy = ""
+            try {
+
+                input = document.getElementById("user-chat").value;
+                const result = eval(input);
+                if (result) {
+                    rpy = ` ${result}`;
+                }
+            }
+            catch {
+                if (userText == "hii") {
+                    rpy = "hello! &#9995 how are you&#128522";
+                }
+                else if (userText == "i am good" || userText == "how was it") {
+                    rpy = "your name &#128512";
+                }
+                else if (userText == "shaik shirin" || userText == "your name ") {
+                    rpy = "&#128521 nice name! how old are you ";
+                }
+                else if (userText == "20") {
+                    rpy = "do you have any siblings"
+                }
+
+                else if (userText == "ha ofcourse") {
+                    rpy = "&#128519 oo nice"
+                }
+                else if (userText == "tnqs" || userText == "") {
+                    rpy = "&#128519 your favorite hobies";
+                }
+                else if (userText == "what is time now") {
+                    rpy = datetime
+                }
+                else if (userText == "what is today") {
+                    rpy = date
+                }
+                else if (userText == "listenig songs") {
+                    rpy = "favroite food!&#128518";
+                }
+                else if (userText == "biryani") {
+                    rpy = "wich clor do you like &#128519";
+
+                }
+                else if (userText == "pink") {
+                    rpy = " &#128522 do you have pet"
+                }
+                else if (userText == "yes i have") {
+                    rpy = "which pet"
+                }
+
+                else if (userText == "cat") {
+                    rpy = "ooh &#128512"
+
+                }
+
+                else {
+                    rpy = "sorry i can't understand"
+                }
+            }
+                console.log(rpy)
+                let data2 = {
+                    messages: rpy,
+                    type: "recieve",
+                    // time: 12.27,
+                };
+                messages.push(data2);
+                console.log(messages);
+
+
+                var chats = '';
+                for (i = 0; i < messages.length; i++) {
+                    if (messages[i].type == "send") {
+                        chats += '<div class=\"message user\">' + messages[i].message + '<br>' + '<span class = \"tim"\>' + datetime + '</div>' + '<span class=\"tim\">' + date + '</span>';
+
+                    }
+
+                    else {
+                        chats += '<div class=\"message bot\">' + messages[i].messages + '<br>' + '<span class = \"tim"\>' + datetime + '</div>' + '<span class=\"tim2\">' + date + '</span>';
+                    }
+                };
+                console.log(input.value);
+                i = "jiohy";
+                document.getElementById('chat').innerHTML = chats;
+                document.getElementById('count').innerHTML = count;
+                document.getElementById('user-chat').value = '';
+                document.getElementById("music").play();
+            }
+            var input = document.getElementById("user-chat");
+            input.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    // event.preventDefault();
+                    document.getElementById("btn").click();
+                }
+            });
+            function evaluateExpression(messages) {
+                try {
+                    const result = eval(messages);
+                    // Only allow numbers and basic operators for safety
+                    if (/^[0-9+\-*/%().\s]+$/.test(messages)) {
+                        const result = eval(messages);
+                        return `Result: ${result}`;
+                    } else {
+                        return "Invalid input. Please enter a valid math expression.";
+                    }
+                    console.log(result)
+                    return "result"
+                } catch (error) {
+                    return "Error in evaluating expression.";
+                }
+                // document.getElementById("operators").
+            }
+            // Example usage:
+            const userMessage = "3*5";
+            const botReply = evaluateExpression(userMessage);
+            console.log(botReply); // Output: Result: 15
+
+
+    </script>
+</body>
+
+</html>

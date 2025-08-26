@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chatty Chat UI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(135deg, #880650, #ee9dca);
+      font-family: 'Comic Sans MS', cursive;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 390px; height: 600px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px 20px 29px 0;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .chat-header {
+      background: #80004d;
+      color: #fff;
+      font-size: 24px;
+      padding: 15px;
+      text-align: center;
+    }
+    .chat-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f0dfed;
+    }
+    .message {
+      max-width: 75%;
+      padding: 12px 19px;
+      font-size: 14px;
+      border-radius: 20px;
+      line-height: 1.4;
+    }
+    .user-message {
+      background: linear-gradient(135deg, #b93181, #657279);
+      color: #fff;
+      align-self: flex-end;
+      border-radius: 20px 20px 0 20px;
+    }
+    .bot-message {
+      background: linear-gradient(135deg, #b93181, #657279);
+      color: #fff;
+      align-self: flex-start;
+      border-radius: 20px 20px 20px 0;
+    }
+    .chat-input {
+      display: flex;
+      padding: 12px;
+      border-top: 1px solid #f197e5;
+      background: linear-gradient(135deg, #b93181, #334d5c);
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 20px;
+      border: 1px solid #1c1c20;
+      outline: none;
+      font-size: 14px;
+      background: #f2f2fc;
+    }
+    .chat-input button {
+      margin-left: 8px;
+      background: linear-gradient(135deg, #996181, #8b3665);
+      border: none;
+      padding: 0 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+    }
+    .chat-input button:hover {
+      background: #53072d;
+    }
+    .typing-dots::after {
+      content: '';
+      animation: dots 1s steps(3, end) infinite;
+    }
+    @keyframes dots {
+      0%, 20% { content: ''; }
+      40% { content: '.'; }
+      60% { content: '..'; }
+      80%, 100% { content: '...'; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Chatty 🥰 <br>
+      <span id="count" style="font-size:12px;"></span>
+    </div>
+    <div class="chat-body" id="chat"></div>
+    <div class="chat-input">
+      <input type="text" id="user-chat" placeholder="Type message..."/>
+      <button onclick="sendMessage()" id="btn">Send</button>
+    </div>
+  </div>
+  
+  <audio src="C:\Users\Lenovo\Downloads\notify-8-313753.mp3" id="music"></audio>
+
+  <script>
+    let messages = [];
+    let count = 0;
+
+    function sendMessage() {
+      const input = document.getElementById("user-chat").value;
+      if (!input.trim()) return;
+
+      const time = new Date();
+      const datetime = time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+      const date = time.toLocaleDateString('en-US', { weekday: "long", day: "2-digit", month: "2-digit", year: "2-digit" });
+
+      messages.push({ message: input, type: "send", time: datetime, date: date });
+      updateChat();
+      document.getElementById("music").play();
+      document.getElementById("user-chat").value = '';
+      count += 2;
+
+      // Add typing animation
+      messages.push({ message: "<span class='typing-dots'></span>", type: "typing", time: datetime, date: date });
+      updateChat();
+
+      setTimeout(() => {
+        // Remove typing
+        messages.pop();
+
+        // Generate bot reply
+        const userText = input.toLowerCase();
+        let rpy = "";
+        try {
+          const result = eval(input);
+          if (/^[0-9+\-*/%().\s]+$/.test(input)) {
+            rpy = `Result: ${result}`;
+          } else {
+            throw "Not an expression";
+          }
+        } catch {
+          if (userText == "hii") rpy = "hello! 👋 how are you😊";
+          else if (userText == "i am good") rpy = "your name 😁";
+          else if (userText == "shaik shirin") rpy = "😉 nice name! how old are you?";
+          else if (userText == "years 20") rpy = "do you have any siblings?";
+          else if (userText == "ha ofcourse") rpy = "😙 oo nice";
+          else if (userText == "tnqs" || userText == "") rpy = "😙 your favorite hobbies?";
+          else if (userText == "what is time now") rpy = datetime;
+          else if (userText == "what is today") rpy = date;
+          else if (userText == "generate random num") rpy = Math.floor(Math.random() * 100);
+          else if (userText == "listening songs") rpy = "favorite food! 😆";
+          else if (userText == "biryani") rpy = "which color do you like? 😙";
+          else if (userText == "pink") rpy = "😊 do you have a pet?";
+          else if (userText == "yes i have") rpy = "which pet?";
+          else if (userText == "cat") rpy = "ooh 😁";
+          else rpy = "sorry I can't understand";
+        }
+
+        messages.push({ message: rpy, type: "recieve", time: datetime, date: date });
+        updateChat();
+        document.getElementById('count').innerHTML = count;
+      }, 1000);
+    }
+
+    function updateChat() {
+      let chats = '';
+      for (let msg of messages) {
+        if (msg.type == "send") {
+          chats += `<div class="message user-message">${msg.message}<br><small>${msg.time} | ${msg.date}</small></div>`;
+        }
+        else if (msg.type == "recieve") {
+          chats += `<div class="message bot-message">${msg.message}<br><small>${msg.time} | ${msg.date}</small></div>`;
+        }
+        else if (msg.type == "typing") {
+          chats += `<div class="message bot-message">${msg.message}</div>`;
+        }
+      }
+      document.getElementById('chat').innerHTML = chats;
+      document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+    }
+
+    document.getElementById("user-chat").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") document.getElementById("btn").click();
+    });
+  </script>
+</body>
+</html>

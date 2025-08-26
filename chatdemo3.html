@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glassmorphism Chatbot UI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1496309732348-3627f3f040ee') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .chat-header {
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.4em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            color: white;
+        }
+
+        .user {
+            background: rgba(0, 123, 255, 0.3);
+            align-self: flex-end;
+            border-radius: 20px 20px 0 20px;
+        }
+
+        .bot {
+            background: rgba(255, 255, 255, 0.2);
+            align-self: flex-start;
+            border-radius: 20px 20px 29px 0;
+            color: rgb(240, 230, 230);
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-size: 1em;
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .chat-input button {
+            padding: 0 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .chat-input button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .tim, .tim2 {
+            font-size: 10px;
+            color: #ccc;
+            align-self: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Chatty 🥳<br>
+            <span id="count" style="font-size:12px;"></span>
+        </div>
+
+        <div class="chat-messages" id="chat">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="user-chat" placeholder="type message....." />
+            <button onclick="sendMessage()" id="btn">Send</button>
+        </div>
+    </div>
+
+    <audio src="C:\Users\Lenovo\Downloads\notify-8-313753.mp3" controls id="music" class="audio" style="display:none;"></audio>
+
+    <script>
+        let count = 0;
+        let messages = [];
+
+        function sendMessage() {
+            count += 2;
+            const time = new Date();
+            const datetime = time.toLocaleString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+            const date = time.toLocaleString([], { day: "2-digit", month: "2-digit", year: "2-digit" });
+
+            const inputElem = document.getElementById("user-chat");
+            const input = inputElem.value.trim();
+            if (!input) return;
+
+            const chatBox = document.getElementById("chat");
+            chatBox.innerHTML += `
+                <div class="message user">${input}<br><span class="tim">${datetime}</span></div>
+                <span class="tim">${date}</span>
+            `;
+
+            const botReply = getBotReply(input.toLowerCase(), datetime, date);
+            inputElem.value = '';
+            document.getElementById("music").play();
+        }
+
+        function getBotReply(userText, datetime, date) {
+            let reply = "";
+            if (userText == "hii") {
+                reply = "hello! 👋 how are you 😊";
+            } else if (userText == "i am good" || userText == "how was it") {
+                reply = "your name 😁";
+            } else if (userText == "shaik shirin" || userText == "your name ") {
+                reply = "😉 nice name! how old are you";
+            } else if (userText == "20") {
+                reply = "do you have any siblings";
+            } else if (userText == "ha ofcourse") {
+                reply = "😙 oo nice";
+            } else if (userText == "tnqs") {
+                reply = "😙 your favorite hobbies";
+            } else if (userText == "what is time now") {
+                reply = datetime;
+            } else if (userText == "what is today") {
+                reply = date;
+            } else if (userText == "listenig songs") {
+                reply = "favorite food! 😆";
+            } else if (userText == "biryani") {
+                reply = "which color do you like 😙";
+            } else if (userText == "pink") {
+                reply = "😊 do you have pet";
+            } else if (userText == "yes i have") {
+                reply = "which pet";
+            } else if (userText == "cat") {
+                reply = "ooh 😁";
+            } else {
+                reply = "sorry I can't understand";
+            }
+
+            showBotTyping(reply, datetime, date);
+            return reply;
+        }
+
+        function showBotTyping(reply, datetime, date) {
+            const chatBox = document.getElementById("chat");
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot";
+            chatBox.appendChild(botDiv);
+
+            const timeEl = document.createElement("span");
+            timeEl.className = "tim2";
+            timeEl.innerHTML = `<br>${datetime}<br><span class="tim2">${date}</span>`;
+            botDiv.appendChild(timeEl);
+
+            typeText(botDiv, reply);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            document.getElementById("count").innerHTML = count;
+        }
+
+        function typeText(element, text, i = 0) {
+            if (i < text.length) {
+                element.firstChild
+                    ? element.firstChild.textContent += text.charAt(i)
+                    : element.insertAdjacentText('afterbegin', text.charAt(i));
+                setTimeout(() => typeText(element, text, i + 1), 40);
+            }
+        }
+
+        document.getElementById("user-chat").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                document.getElementById("btn").click();
+            }
+        });
+    </script>
+</body>
+
+</html>
